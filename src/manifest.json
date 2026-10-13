@@ -1,0 +1,28 @@
+{
+ "name": "@sabaki-js/doom",
+ "domain": "doom",
+ "version": "0.1.0",
+ "questions": [
+  "command",
+  "target",
+  "weapon"
+ ],
+ "primary": "command",
+ "keywords": [
+  "doom",
+  "health",
+  "ammo",
+  "enemy",
+  "door",
+  "exit",
+  "weapon",
+  "armor",
+  "shoot",
+  "map"
+ ],
+ "threshold": 0.15,
+ "modes": {
+  "nano": "poids TF-IDF embarqu\u00e9s (weights.json) via nanoClassifier",
+  "mini": "ONNX via miniClassifier(manifest, workflow) + decideAsync"
+ }
+}
