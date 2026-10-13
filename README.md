@@ -1,21 +1,27 @@
-# @sabaki-js/plugin-template
+<img src="https://raw.githubusercontent.com/sabaki-js/sabaki/main/assets/logo.svg" width="120" alt="sabaki logo" />
 
-Starter template for a [sabaki](https://github.com/sabaki-js/sabaki) plugin.
-Click **Use this template**, rename the package, implement `classify` — done.
+# @sabaki-js/doom
 
-## Three ways to build a plugin
+[![npm](https://img.shields.io/npm/v/%40sabaki-js%2Fdoom)](https://www.npmjs.com/package/%40sabaki-js%2Fdoom) [![license](https://img.shields.io/npm/l/%40sabaki-js%2Fdoom)](https://github.com/sabaki-js/plugin-doom#readme) [![CI](https://github.com/sabaki-js/plugin-doom/actions/workflows/test-battery.yml/badge.svg)](https://github.com/sabaki-js/plugin-doom/actions)
 
-1. **Ad-hoc** (`definePlugin`) — no training, a function is enough.
-2. **`nano`** (`nanoClassifier` + TF-IDF weights) — kilobytes, <1 ms, zero dependencies.
-3. **`mini`** (`miniClassifier` + ONNX) — semantic understanding, ~20 ms.
+Doom decisions (navigation + combat arbitration).
 
-See `src/index.ts` (commented examples) and `src/manifest.json` (annotated fields).
+Questions: `command`, `target`, `weapon`. Work in progress: nav MiniLM (MAP01) + vision policy (arena).
 
-## Publish
+## Usage
 
-```sh
-npm version patch && npm run publish-package  # tags v* -> CI publishes to npm
+```ts
+import { Sabaki } from "sabaki";
+import plugin from "@sabaki-js/doom";
+
+const sabaki = new Sabaki().register(plugin.default ?? plugin);
+const r = sabaki.decide({ state: "..." });
+// { domain: "doom", decision: ..., confidence: ..., plugin: "@sabaki-js/doom" }
 ```
+
+Ask another question with `input.question`.
+
+Part of [sabaki](https://github.com/sabaki-js/sabaki) — see the [GUIDE](https://github.com/sabaki-js/sabaki/blob/main/GUIDE.md).
 
 ## License
 
