@@ -16,10 +16,12 @@ The mini model (MiniLM + exit compass) finishes MAP01 — 4/6 EXIT:
 
 ![démo : le mini finit MAP01](assets/demo_full.gif)
 
-| mode | weights | closed loop |
-|---|---|---|
-| nano (TF-IDF, 112 terms) | `src/weights.json` | 0/6 |
-| mini (MiniLM ONNX, CPU) | `sabaki-models` | 2–4/6 |
+| mode | weights | closed loop | throughput (CPU, 1 thread) |
+|---|---|---|---|
+| nano (TF-IDF, 112 terms) | `src/weights.json` | 0/6 | 18 000 req/s (i5) / 12 000 (Xeon) |
+| mini (MiniLM ONNX, CPU) | `sabaki-models` | 2–4/6 | 71 req/s (i5) / 73 (Xeon) |
+
+`node bench_throughput.mjs [nano|mini|all] [iters]` reproduces these numbers.
 
 ## Run your own demo
 
