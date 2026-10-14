@@ -8,6 +8,20 @@ Doom decisions (navigation + combat arbitration).
 
 Questions: `command`, `target`, `weapon`. Work in progress: nav MiniLM (MAP01) + vision policy (arena).
 
+## Demo
+
+`npm run demo` — the plugin decides on 3 canned MAP01 states (nano, no deps).
+
+Full closed loop (JS decides, Python plays): `node serve_mini.mjs` + `python examples/drive_serve.py`.
+The mini model (MiniLM + exit compass) finishes MAP01 — 4/6 EXIT:
+
+<video src="assets/demo_exit.mp4" width="480" controls></video>
+
+| mode | weights | closed loop |
+|---|---|---|
+| nano (TF-IDF, 112 terms) | `src/weights.json` | 0/6 |
+| mini (MiniLM ONNX, CPU) | `sabaki-models` | 2–4/6 |
+
 ## Usage
 
 ```ts

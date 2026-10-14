@@ -20,7 +20,8 @@
 	"files": [
 		"dist",
 		"README.md",
-		"LICENSE"
+		"LICENSE",
+		"assets/demo_exit.mp4"
 	],
 	"type": "module",
 	"scripts": {
