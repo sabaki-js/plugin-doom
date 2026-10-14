@@ -29,7 +29,7 @@ decides, the Python client plays — one HTTP call per game tick.
 ```sh
 # 1. game + model stack (Python)
 pip install vizdoom gymnasium pygame onnxruntime
-git clone https://github.com/azalio/doomLaya /tmp/doomlaya
+git clone https://github.com/sabaki-js/doomLaya /tmp/doomlaya  # fork Apache-2.0 d'azalio/doomLaya, voir NOTICE
 
 # 2. mini weights (~90 MB) + tokenizer
 # from https://github.com/sabaki-js/sabaki-models/releases (doom_nav.onnx)
