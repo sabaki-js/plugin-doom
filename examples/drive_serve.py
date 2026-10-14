@@ -149,14 +149,11 @@ def main(episodes=6, seconds=300):
                     main._wiggle = 0
                     main._wiggle_until = tick + 20
                     main._wiggle_dir = _rd.choice([-1, 1])
-                # hystérésis : tient l'override 25 ticks (pas 1) pour laisser l'executor agir
+                # garde simple (miroir drive_mini) : 1 tick, pas de latch
                 if s.get("door"):
-                    main._latch, main._latch_until = ("open_door", dict(s["door"])), tick + 25
+                    action, tgt = "open_door", dict(s["door"])
                 else:
-                    main._latch, main._latch_until = ("explore", None), tick + 25
-                action, tgt = main._latch
-            elif getattr(main, '_latch_until', 0) > tick:
-                action, tgt = main._latch
+                    action, tgt = "explore", None
             tactic = action
             # cutoff anti-stagnation : pas de progrès exit depuis 1500 ticks -> épisode suivant
             ex_c = controller.mission.exit
@@ -202,4 +199,5 @@ def main(episodes=6, seconds=300):
     n = sum(1 for s in stats if s["exit"])
     print(f"MATCH: {n}/{len(stats)} EXIT", flush=True)
 
-main()
+import sys as _sys
+main(int(_sys.argv[1]) if len(_sys.argv) > 1 else 6)
