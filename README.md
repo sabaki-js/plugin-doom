@@ -15,8 +15,7 @@ Questions: `command`, `target`, `weapon`. Work in progress: nav MiniLM (MAP01) +
 Full closed loop (JS decides, Python plays): `node serve_mini.mjs` + `python examples/drive_serve.py`.
 The mini model (MiniLM + exit compass) finishes MAP01 — 4/6 EXIT:
 
-[![démo : le mini finit MAP01](assets/demo_preview.gif)](https://github.com/sabaki-js/plugin-doom/raw/refs/heads/main/assets/demo_exit.mp4)
-*(cliquez pour la vidéo complète)*
+![démo : le mini finit MAP01](assets/demo_full.gif)
 
 | mode | weights | closed loop |
 |---|---|---|
