@@ -1,7 +1,7 @@
 """Test latch open_door (pur, sans VizDoom). Usage: python3 test_door_latch.py"""
-import ast, textwrap
+import ast, os, textwrap
 
-SRC = "/home/lsannier/sabaki-js/plugin-doom/examples/drive_serve.py"
+SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "drive_serve.py")
 src = open(SRC).read()
 tree = ast.parse(src)
 want = {"latch_door", "latch_target"}
