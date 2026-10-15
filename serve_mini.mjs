@@ -33,6 +33,36 @@ const server = http.createServer((req, res) => {
 		res.end(JSON.stringify(obj));
 	};
 	if (req.method === "GET" && req.url === "/health") return json(200, { status: "ok", domain: "doom", mode: "mini" });
+	if (req.method === "POST" && req.url === "/v1/systemone") {
+		let body = "";
+		req.on("data", (c) => (body += c));
+		req.on("end", async () => {
+			try {
+				const { state, questions } = JSON.parse(body);
+				const answers = {};
+				for (const [id, q] of Object.entries(questions ?? {})) {
+					if (!q || (q.type !== "choice" && q.type !== "score" && q.type !== "noul"))
+						return json(422, { error: `${id}: type invalide` });
+					// Mini v0.3.0 : seule tête `command` (attack/exit/open_door).
+					// target/weapon échoient command en attendant les têtes dédiées.
+					const r = await decide(state);
+					const probs = { [r.decision]: r.confidence };
+					answers[id] =
+						q.type === "noul"
+							? { type: "noul", noul: r.decision === "attack" ? r.confidence : 1 - r.confidence }
+							: { type: "choice", choice: r.decision, probabilities: probs, confidence: r.confidence };
+				}
+				return json(200, {
+					model: "doom-mini-nav-v0.3.0",
+					answers,
+					usage: { input_tokens: String(state).length >> 2, output_tokens: 0 },
+				});
+			} catch (e) {
+				json(400, { error: String(e?.message ?? e) });
+			}
+		});
+		return;
+	}
 	if (req.method === "POST" && req.url === "/decide") {
 		let body = "";
 		req.on("data", (c) => (body += c));

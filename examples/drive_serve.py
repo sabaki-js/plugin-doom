@@ -8,9 +8,16 @@ from doomlib.mission import map_data, Mission
 
 SERVE = os.environ.get("DOOM_SERVE", "http://localhost:8471")
 OUT = "/tmp/sabaki/navtest"
+VIDEO = os.environ.get("DOOM_VIDEO", "")
 DAGGER = []
 os.makedirs(OUT, exist_ok=True)
 print("serveur JS:", SERVE, flush=True)
+if VIDEO:
+    sys.path.insert(0, "/tmp/doomlaya")
+    from doomlib.overlay import Overlay, Recorder
+    overlay = Overlay(["navigate"], "sabaki-jev")
+    rec = Recorder(VIDEO)
+    print("vidéo:", VIDEO, flush=True)
 
 def predict(state):
     """Jev-like : command + target + weapon depuis /v1/systemone (ONNX mini).
@@ -222,6 +229,26 @@ def main(episodes=6, seconds=300):
                     a[4] = 6 * main._wiggle_dir
             game.make_action(a, 1)
             tick += 1
+            if VIDEO:
+                try:
+                    st = game.get_state()
+                    fr = st.screen_buffer
+                    import numpy as _np
+                    if fr.shape[0] == 3:
+                        fr = fr.transpose(1, 2, 0)
+                    s2 = dict(s)
+                    s2.update({"seconds": tick / 35, "map": "MAP01",
+                               "kills": s.get("kills", 0), "combat": {"mode": "nav"},
+                               "execution": {"action": action}})
+                    decision = {"answers": {
+                        q: {"choice": dec.get(q), "probabilities": {str(dec.get(q)): dec.get(q + "_conf", 0)}}
+                        for q in ("command", "target", "weapon")},
+                        "model": dec.get("model"), "latency_ms": 0, "tokens": 0,
+                        "routing": {"checkpoint": "sabaki-doom-mini"}}
+                    stats2 = {"kills": s.get("kills", 0), "decisions": tick, "errors": 0, "deaths": 0}
+                    rec.write(overlay.render(fr, s2, decision, action, stats2, False))
+                except (BrokenPipeError, AttributeError, KeyError):
+                    pass
             if game.is_player_dead():
                 break
         done = game.is_episode_finished() and not game.is_player_dead()
