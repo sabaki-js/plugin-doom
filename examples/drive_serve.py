@@ -13,12 +13,46 @@ os.makedirs(OUT, exist_ok=True)
 print("serveur JS:", SERVE, flush=True)
 
 def predict(state):
-    req = urllib.request.Request(SERVE + "/decide",
-        data=json.dumps({"state": state}).encode(),
+    """Jev-like : command + target + weapon depuis /v1/systemone (ONNX mini).
+
+    Aujourd'hui les têtes target/weapon n'existent pas (nano comme mini ne
+    connaissent que `command`) : le modèle renvoie la décision command pour
+    les 3 questions. Le client utilise `command` et dérive cible/arme en
+    heuristique en attendant les têtes dédiées.
+    """
+    body = {"state": state, "questions": {
+        "command": {"type": "choice", "instructions": "High-level command.",
+                    "criteria": {"attack": None, "exit": None, "open_door": None}},
+        "target": {"type": "choice", "instructions": "What to target?",
+                   "criteria": {"enemy": None, "door": None, "item": None, "none": None}},
+        "weapon": {"type": "choice", "instructions": "Which weapon?",
+                   "criteria": {"pistol": None, "shotgun": None, "chaingun": None}},
+    }}
+    req = urllib.request.Request(SERVE + "/v1/systemone",
+        data=json.dumps(body).encode(),
         headers={"content-type": "application/json"})
-    with urllib.request.urlopen(req, timeout=10) as r:
-        d = json.load(r)
-    return d["decision"]
+    try:
+        with urllib.request.urlopen(req, timeout=10) as r:
+            d = json.load(r)
+        ans = d.get("answers", {})
+        out = {}
+        for q in ("command", "target", "weapon"):
+            a = ans.get(q, {})
+            out[q] = a.get("choice")
+            out[q + "_conf"] = a.get("confidence", 0)
+        out["model"] = d.get("model")
+        if not out["command"]:
+            raise ValueError("pas de command")
+        return out
+    except Exception:
+        # Repli legacy /decide (command seule).
+        req = urllib.request.Request(SERVE + "/decide",
+            data=json.dumps({"state": state}).encode(),
+            headers={"content-type": "application/json"})
+        with urllib.request.urlopen(req, timeout=10) as r:
+            d = json.load(r)
+        return {"command": d["decision"], "command_conf": d.get("confidence", 0),
+                "target": None, "weapon": None, "model": "legacy"}
 
 def direct(action, target=None):
     return {"action": action, "target": target, "weapon": None,
@@ -82,7 +116,8 @@ def main(episodes=6, seconds=300):
                 dd = _me.hypot(dx, dy)
                 ang = (_me.degrees(_me.atan2(dy, dx)) - s.get('angle', 0) + 180) % 360 - 180
                 text += f"\nexit: {dd:.1f}m bearing {ang:+.0f}"
-            action = predict(text)
+            dec = predict(text)
+            action = dec["command"]
             # DAgger : label expert (FSM) en regard du modèle
             enemies = s.get("enemies", [])
             close = [e for e in enemies if e.get("distance", 1e9) < 400]
@@ -168,7 +203,7 @@ def main(episodes=6, seconds=300):
                 ex = controller.mission.exit
                 import math as _mm
                 dd = _mm.hypot(ex['center'][0] - s['x'], ex['center'][1] - s['y']) if ex else -1
-                print(f"diag t{tick}: pos=({s['x']:.0f},{s['y']:.0f}) d_exit={dd:.0f} hp={s.get('hp', 0):.0f} dec={action}", flush=True)
+                print(f"diag t{tick}: pos=({s['x']:.0f},{s['y']:.0f}) d_exit={dd:.0f} hp={s.get('hp', 0):.0f} dec={action} tgt={dec.get('target')} wpn={dec.get('weapon')} model={dec.get('model')}", flush=True)
             tgt = None
             if action == "attack" and s.get("enemies"):
                 e = s["enemies"][0]
