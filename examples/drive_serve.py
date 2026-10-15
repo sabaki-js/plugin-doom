@@ -224,9 +224,9 @@ def main(episodes=6, seconds=300):
                     action, tgt = "explore", None
             # Latch open_door : une porte choisie = 15 ticks pour approcher + USE,
             # sinon l'oscillation open_door/exit empêche toute ouverture.
-            if not hasattr(main, "_latch"):
-                main._latch = {}
-            action, main._latch = latch_door(main._latch, action, s, tick)
+            if not isinstance(getattr(main, "_doorlatch", None), dict):
+                main._doorlatch = {}
+            action, main._doorlatch = latch_door(main._doorlatch, action, s, tick)
             tactic = action
             # cutoff anti-stagnation : pas de progrès exit depuis 1500 ticks -> épisode suivant
             ex_c = controller.mission.exit
@@ -247,7 +247,7 @@ def main(episodes=6, seconds=300):
                 e = s["enemies"][0]
                 tgt = {"id": e.get("id"), "name": e.get("name")}
             elif action == "open_door":
-                tgt = latch_target(main._latch, action, s)
+                tgt = latch_target(getattr(main, "_doorlatch", {}), action, s)
             elif action == "pickup" and s.get("items"):
                 tgt = dict(s["items"][0])
             controller.accept(direct(action, tgt), tick)
