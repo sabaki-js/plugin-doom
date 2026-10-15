@@ -61,6 +61,32 @@ def predict(state):
         return {"command": d["decision"], "command_conf": d.get("confidence", 0),
                 "target": None, "weapon": None, "model": "legacy"}
 
+def latch_door(state, action, s, tick, hold=15):
+    """Latch open_door : -> (action, state). Pur, testable sans VizDoom.
+
+    state = {} persistant (ex attributs de main). Une porte choisie verrouille
+    l'action `hold` ticks ; la cible mémorisée survit aux trous de capteurs.
+    """
+    latched = state.get("door_latch")
+    if action == "open_door" and s.get("door"):
+        latched = {"tgt": dict(s["door"]), "until": tick + hold}
+        state["door_latch"] = latched
+    if latched and tick < latched["until"] and s.get("door"):
+        return "open_door", state
+    if latched and tick >= latched["until"]:
+        state.pop("door_latch", None)
+    return action, state
+
+def latch_target(state, action, s):
+    """Cible mémorisée en repli des trous de capteurs."""
+    if action == "open_door":
+        if s.get("door"):
+            return dict(s["door"])
+        lat = state.get("door_latch")
+        if lat:
+            return lat["tgt"]
+    return None
+
 def direct(action, target=None):
     return {"action": action, "target": target, "weapon": None,
             "decision_id": f"m-{time.time_ns()}", "command": action, "expires_tick": 10 ** 12}
@@ -198,14 +224,9 @@ def main(episodes=6, seconds=300):
                     action, tgt = "explore", None
             # Latch open_door : une porte choisie = 15 ticks pour approcher + USE,
             # sinon l'oscillation open_door/exit empêche toute ouverture.
-            latched = getattr(main, "_door_latch", None)
-            if action == "open_door" and s.get("door"):
-                main._door_latch = {"tgt": dict(s["door"]), "until": tick + 15}
-                latched = main._door_latch
-            if latched and tick < latched["until"] and s.get("door"):
-                action = "open_door"
-            elif latched and tick >= latched["until"]:
-                main._door_latch = None
+            if not hasattr(main, "_latch"):
+                main._latch = {}
+            action, main._latch = latch_door(main._latch, action, s, tick)
             tactic = action
             # cutoff anti-stagnation : pas de progrès exit depuis 1500 ticks -> épisode suivant
             ex_c = controller.mission.exit
@@ -226,7 +247,7 @@ def main(episodes=6, seconds=300):
                 e = s["enemies"][0]
                 tgt = {"id": e.get("id"), "name": e.get("name")}
             elif action == "open_door":
-                tgt = dict(s["door"]) if s.get("door") else getattr(main, "_door_latch", {}).get("tgt")
+                tgt = latch_target(main._latch, action, s)
             elif action == "pickup" and s.get("items"):
                 tgt = dict(s["items"][0])
             controller.accept(direct(action, tgt), tick)
