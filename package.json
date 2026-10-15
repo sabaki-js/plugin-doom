@@ -2,7 +2,7 @@
   "name": "@sabaki-js/doom",
   "version": "1.0.1",
   "license": "MIT",
-  "description": "Sabaki plugin — Doom decisions (nav + combat arbitration).",
+  "description": "Sabaki plugin - Doom decisions (nav + combat arbitration).",
   "repository": {
     "type": "git",
     "url": "https://github.com/sabaki-js/plugin-doom"
