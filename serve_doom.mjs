@@ -1,4 +1,4 @@
-// serve_doom — le plugin @sabaki-js/doom décide en JS (HTTP), le client Python joue.
+// serve_doom - le plugin @sabaki-js/doom décide en JS (HTTP), le client Python joue.
 // Usage: node serve_doom.mjs [port]  (POST /decide {"state": "..."} -> {"decision", "confidence"})
 import http from "http";
 

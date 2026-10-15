@@ -1,4 +1,4 @@
-// Débit décisions/s (nano et/ou mini) — CPU, 1 thread.
+// Débit décisions/s (nano et/ou mini) - CPU, 1 thread.
 // Usage: node bench_throughput.mjs [nano|mini|all] [iters]
 import fs from "fs";
 

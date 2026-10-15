@@ -10,9 +10,9 @@ Questions: `command`, `target`, `weapon`. Work in progress: nav MiniLM (MAP01) +
 
 ## Demo
 
-`npm run demo` — the plugin decides on 3 canned MAP01 states (nano, no deps).
+`npm run demo` - the plugin decides on 3 canned MAP01 states (nano, no deps).
 
-The mini model (MiniLM + exit compass) finishes MAP01 — 4/6 EXIT:
+The mini model (MiniLM + exit compass) finishes MAP01 - 4/6 EXIT:
 
 ![démo : le mini finit MAP01](assets/demo_full.gif)
 
@@ -21,14 +21,14 @@ MAP01 exit on video (`assets/ep_exit_latch.mp4`, 1080p) via the Jev endpoint: `c
 | mode | weights | closed loop | throughput (CPU, 1 thread) |
 |---|---|---|---|
 | mini (MiniLM ONNX, CPU) | `sabaki-models` | 2–4/6 | 71 req/s (i5) / 73 (Xeon) |
-| nano (TF-IDF, 112 terms) | `src/weights.json` (legacy, demo only — 0/6, dropped) | 0/6 | 18 000 req/s (i5) / 12 000 (Xeon) |
+| nano (TF-IDF, 112 terms) | `src/weights.json` (legacy, demo only - 0/6, dropped) | 0/6 | 18 000 req/s (i5) / 12 000 (Xeon) |
 
 `node bench_throughput.mjs [nano|mini|all] [iters]` reproduces these numbers.
 
 ## Run your own demo
 
 The classifier runs in Node, the game in Python (VizDoom). The JS server
-decides, the Python client plays — one HTTP call per game tick.
+decides, the Python client plays - one HTTP call per game tick.
 
 ```sh
 # 1. game + model stack (Python)
@@ -47,7 +47,7 @@ node serve_mini.mjs 8472
 DOOM_SERVE=http://localhost:8472 python examples/drive_serve.py 1
 ```
 
-`serve_doom.mjs` serves the nano classifier instead (faster, weaker: 0/6 —
+`serve_doom.mjs` serves the nano classifier instead (faster, weaker: 0/6 -
 it decides well on single states but cannot navigate a full level).
 
 ## Usage
@@ -63,7 +63,7 @@ const r = sabaki.decide({ state: "..." });
 
 Ask another question with `input.question`.
 
-Part of [sabaki](https://github.com/sabaki-js/sabaki) — see the [GUIDE](https://github.com/sabaki-js/sabaki/blob/main/GUIDE.md).
+Part of [sabaki](https://github.com/sabaki-js/sabaki) - see the [GUIDE](https://github.com/sabaki-js/sabaki/blob/main/GUIDE.md).
 
 ## License
 

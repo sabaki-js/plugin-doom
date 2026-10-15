@@ -1,4 +1,4 @@
-// serve_mini — navmodel4 ONNX servi depuis Node (onnxruntime-node + wordpiece sabaki).
+// serve_mini - navmodel4 ONNX servi depuis Node (onnxruntime-node + wordpiece sabaki).
 // Usage: ONNX=/path/doom_nav.onnx VOCAB=/path/tokenizer.json node serve_mini.mjs [port]
 import http from "http";
 import fs from "fs";

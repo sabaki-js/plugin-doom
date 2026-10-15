@@ -1,11 +1,11 @@
 /**
- * @sabaki-js/doom — sabaki plugin for the `doom` domain.
+ * @sabaki-js/doom - sabaki plugin for the `doom` domain.
  *
  * Bundled `nano` mode (TF-IDF weights, <1 ms, zero dependencies).
  * Decides the high-level command (`attack`/`exit`/`open_door`) from a
  * text game state; a scripted executor (A* + waypoints, see sabaki/gpu/doom)
  * turns the command into Doom inputs. The state should include an
- * `exit: <dist>m bearing <±deg>` compass line — without it the classifier
+ * `exit: <dist>m bearing <±deg>` compass line - without it the classifier
  * cannot navigate (see REPORT).
  */
 import {
