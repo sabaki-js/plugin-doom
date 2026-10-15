@@ -8,7 +8,7 @@ const iters = Number(process.argv[3] ?? 200);
 const STATE = "t=40.0s HP 82 armor 0 weapon 2 ammo 30 kills 5\ncurrent tactic: exit, held 0.0s\nenemies: Imp 120.0m bearing +10\nitems: none\nwalls: ahead 8.1m left 5.0m right 4.2m\ndoor: none visible\nleast explored: right\nrecent tactics: exit\nexit: 620.0m bearing -40";
 
 if (mode === "nano" || mode === "all") {
-	const plugin = (await import("/home/lsannier/sabaki-js/plugin-doom/dist/index.js").catch(() => null))
+	const plugin = (await import("~/sabaki-js/plugin-doom/dist/index.js").catch(() => null))
 		?? (await import("/kaggle/working/doom_serve/dist/index.js").catch(() => null));
 	const P = plugin.default ?? plugin;
 	P.classify({ state: STATE }); // chauffe
