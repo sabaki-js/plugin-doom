@@ -18,6 +18,14 @@ The mini model (MiniLM + exit compass) finishes MAP01 - 4/6 EXIT:
 
 MAP01 exit on video (`assets/ep_exit_latch.mp4`, 1080p) via the Jev endpoint: `command` + `target` + `weapon` in one `/v1/systemone` call, overlayed per tick.
 
+| run | EXIT | time |
+|---|---|---|
+| doomLaya scripted reference (controller) | yes | ~61 s |
+| **sabaki mini + latch (`ep_exit_latch.mp4`)** | **1/1** | **36.4 s (1274 ticks)** |
+| sabaki nano (TF-IDF) | 0/6 | — |
+
+Single episode so far (variance known: mini 2–4/6) — the latch (hold `open_door` 15 ticks) fixed the door oscillation.
+
 | mode | weights | closed loop | throughput (CPU, 1 thread) |
 |---|---|---|---|
 | mini (MiniLM ONNX, CPU) | `sabaki-models` | 2–4/6 | 71 req/s (i5) / 73 (Xeon) |
