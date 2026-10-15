@@ -1,61 +1,61 @@
 {
-	"name": "@sabaki-js/doom",
-	"version": "1.0.0",
-	"license": "MIT",
-	"description": "Sabaki plugin \u2014 Doom decisions (nav + combat arbitration).",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/sabaki-js/plugin-doom"
-	},
-	"main": "dist/index.js",
-	"module": "dist/index.js",
-	"types": "dist/index.d.ts",
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js",
-			"default": "./dist/index.js"
-		}
-	},
-	"files": [
-		"dist",
-		"README.md",
-		"LICENSE",
-		"assets/demo_exit.mp4"
-	],
-	"type": "module",
-	"scripts": {
-		"prepack": "npm run build",
-		"build:watch": "tsc --watch",
-		"typecheck": "tsc --noEmit",
-		"example": "tsx examples/demo.ts",
-		"demo": "tsx examples/demo.ts",
-		"format": "bunx --bun @biomejs/biome format --write ./src",
-		"check": "bunx --bun @biomejs/biome check ./src",
-		"lint": "bunx --bun @biomejs/biome lint ./src",
-		"lint:write": "bunx --bun @biomejs/biome lint --write ./src",
-		"test": "bunx --bun @biomejs/biome test ./src",
-		"build": "tsc --project tsconfig.json && cp src/manifest.json src/weights.json dist/",
-		"deploy:npm": "npm publish --access public",
-		"publish-package": "bash ./scripts/publish-package.sh"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^2.4.12",
-		"@eslint/js": "^10.0.1",
-		"@types/bun": "^1.3.12",
-		"eslint": "^10.2.1",
-		"globals": "^17.5.0",
-		"jiti": "^2.6.1",
-		"tsup": "^8.5.1",
-		"typescript-eslint": "^8.58.2"
-	},
-	"peerDependencies": {
-		"sabaki": "^0.1.0"
-	},
-	"keywords": [
-		"sabaki",
-		"sabaki-plugin",
-		"template"
-	],
-	"author": "fox3000foxy"
+  "name": "@sabaki-js/doom",
+  "version": "1.0.1",
+  "license": "MIT",
+  "description": "Sabaki plugin — Doom decisions (nav + combat arbitration).",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sabaki-js/plugin-doom"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "assets/demo_exit.mp4"
+  ],
+  "type": "module",
+  "scripts": {
+    "prepack": "npm run build",
+    "build:watch": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "example": "tsx examples/demo.ts",
+    "demo": "tsx examples/demo.ts",
+    "format": "bunx --bun @biomejs/biome format --write ./src",
+    "check": "bunx --bun @biomejs/biome check ./src",
+    "lint": "bunx --bun @biomejs/biome lint ./src",
+    "lint:write": "bunx --bun @biomejs/biome lint --write ./src",
+    "test": "bunx --bun @biomejs/biome test ./src",
+    "build": "tsc --project tsconfig.json && cp src/manifest.json src/weights.json dist/",
+    "deploy:npm": "npm publish --access public",
+    "publish-package": "bash ./scripts/publish-package.sh"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.12",
+    "@eslint/js": "^10.0.1",
+    "@types/bun": "^1.3.12",
+    "eslint": "^10.2.1",
+    "globals": "^17.5.0",
+    "jiti": "^2.6.1",
+    "tsup": "^8.5.1",
+    "typescript-eslint": "^8.58.2"
+  },
+  "peerDependencies": {
+    "sabaki": ">=0.1.0"
+  },
+  "keywords": [
+    "sabaki",
+    "sabaki-plugin",
+    "template"
+  ],
+  "author": "fox3000foxy"
 }
