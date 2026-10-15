@@ -16,6 +16,8 @@ The mini model (MiniLM + exit compass) finishes MAP01 — 4/6 EXIT:
 
 ![démo : le mini finit MAP01](assets/demo_full.gif)
 
+MAP01 exit on video (`assets/ep_exit_latch.mp4`, 1080p) via the Jev endpoint: `command` + `target` + `weapon` in one `/v1/systemone` call, overlayed per tick.
+
 | mode | weights | closed loop | throughput (CPU, 1 thread) |
 |---|---|---|---|
 | mini (MiniLM ONNX, CPU) | `sabaki-models` | 2–4/6 | 71 req/s (i5) / 73 (Xeon) |
