@@ -196,6 +196,16 @@ def main(episodes=6, seconds=300):
                     action, tgt = "open_door", dict(s["door"])
                 else:
                     action, tgt = "explore", None
+            # Latch open_door : une porte choisie = 15 ticks pour approcher + USE,
+            # sinon l'oscillation open_door/exit empêche toute ouverture.
+            latched = getattr(main, "_door_latch", None)
+            if action == "open_door" and s.get("door"):
+                main._door_latch = {"tgt": dict(s["door"]), "until": tick + 15}
+                latched = main._door_latch
+            if latched and tick < latched["until"] and s.get("door"):
+                action = "open_door"
+            elif latched and tick >= latched["until"]:
+                main._door_latch = None
             tactic = action
             # cutoff anti-stagnation : pas de progrès exit depuis 1500 ticks -> épisode suivant
             ex_c = controller.mission.exit
@@ -215,8 +225,8 @@ def main(episodes=6, seconds=300):
             if action == "attack" and s.get("enemies"):
                 e = s["enemies"][0]
                 tgt = {"id": e.get("id"), "name": e.get("name")}
-            elif action == "open_door" and s.get("door"):
-                tgt = dict(s["door"])
+            elif action == "open_door":
+                tgt = dict(s["door"]) if s.get("door") else getattr(main, "_door_latch", {}).get("tgt")
             elif action == "pickup" and s.get("items"):
                 tgt = dict(s["items"][0])
             controller.accept(direct(action, tgt), tick)
