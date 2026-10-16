@@ -8,6 +8,21 @@ Doom decisions (navigation + combat arbitration).
 
 Questions: `command`, `target`, `weapon`. Work in progress: nav MiniLM (MAP01) + vision policy (arena).
 
+## How it plays (no vision model on the nav path)
+
+The bot never sees pixels. Each tick, VizDoom exposes engine internals —
+**labels buffer** (per-object semantic segmentation), sectors, positions —
+and `doomlib.Sensors` turns them into a text state plus one compass line
+(`exit: 12m bearing -5deg`). The MiniLM cross-encoder answers
+`command`/`target`/`weapon` over HTTP; the scripted executor (A* waypoints,
+door approach, 15-tick open-door latch) converts the command into the 14
+game inputs. Text in, buttons out — the "image" is the engine telling the
+truth about what is where.
+
+Separate track: a **vision** head (`tiny-doom-defender`, 1.1M params,
+supervised fine-tune, 22.6 kills in-arena) plays from pixels for combat.
+No reinforcement learning anywhere yet — SFT + FSM only.
+
 ## Demo
 
 `npm run demo` - the plugin decides on 3 canned MAP01 states (nano, no deps).
